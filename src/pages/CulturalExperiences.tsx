@@ -1,9 +1,13 @@
+import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Calendar, Users, Clock, Star } from "lucide-react";
 import cultural from "@/assets/cultural-performance.jpg";
+import { BookingDialog } from "@/components/BookingDialog";
 
 const CulturalExperiences = () => {
+  const [bookingDialogOpen, setBookingDialogOpen] = useState(false);
+  const [selectedExperience, setSelectedExperience] = useState<typeof experiences[0] | null>(null);
   const experiences = [
     {
       title: "Traditional Dance Performances",
@@ -115,7 +119,15 @@ const CulturalExperiences = () => {
 
                   <div className="flex items-center justify-between">
                     <span className="text-lg font-bold text-accent">{experience.price}</span>
-                    <Button className="gradient-hero">Book Now</Button>
+                    <Button 
+                      className="gradient-hero"
+                      onClick={() => {
+                        setSelectedExperience(experience);
+                        setBookingDialogOpen(true);
+                      }}
+                    >
+                      Book Now
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
@@ -158,6 +170,15 @@ const CulturalExperiences = () => {
           </Card>
         </div>
       </section>
+
+      {/* Booking Dialog */}
+      {selectedExperience && (
+        <BookingDialog
+          open={bookingDialogOpen}
+          onOpenChange={setBookingDialogOpen}
+          experience={selectedExperience}
+        />
+      )}
     </div>
   );
 };
