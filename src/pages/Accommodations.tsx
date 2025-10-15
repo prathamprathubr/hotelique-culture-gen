@@ -1,10 +1,14 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Check, Maximize, Users, Wifi } from "lucide-react";
 import roomDeluxe from "@/assets/room-deluxe.jpg";
 import roomSuite from "@/assets/room-suite.jpg";
+import { RoomBookingDialog } from "@/components/RoomBookingDialog";
 
 const Accommodations = () => {
+  const [bookingDialogOpen, setBookingDialogOpen] = useState(false);
+  const [selectedRoom, setSelectedRoom] = useState<typeof rooms[0] | null>(null);
   const rooms = [
     {
       title: "Deluxe Room",
@@ -103,7 +107,13 @@ const Accommodations = () => {
                       ))}
                     </ul>
 
-                    <Button className="w-full gradient-hero text-lg py-6">
+                    <Button 
+                      className="w-full gradient-hero text-lg py-6"
+                      onClick={() => {
+                        setSelectedRoom(room);
+                        setBookingDialogOpen(true);
+                      }}
+                    >
                       Book This Room
                     </Button>
                   </CardContent>
@@ -142,6 +152,15 @@ const Accommodations = () => {
           </div>
         </div>
       </section>
+
+      {/* Booking Dialog */}
+      {selectedRoom && (
+        <RoomBookingDialog
+          open={bookingDialogOpen}
+          onOpenChange={setBookingDialogOpen}
+          room={selectedRoom}
+        />
+      )}
     </div>
   );
 };

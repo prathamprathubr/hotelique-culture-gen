@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -7,8 +8,11 @@ import roomDeluxe from "@/assets/room-deluxe.jpg";
 import roomSuite from "@/assets/room-suite.jpg";
 import restaurant from "@/assets/restaurant.jpg";
 import cultural from "@/assets/cultural-performance.jpg";
+import { RoomBookingDialog } from "@/components/RoomBookingDialog";
 
 const Home = () => {
+  const [bookingDialogOpen, setBookingDialogOpen] = useState(false);
+  const [selectedRoom, setSelectedRoom] = useState<typeof rooms[0] | null>(null);
   const rooms = [
     {
       title: "Deluxe Room",
@@ -63,9 +67,11 @@ const Home = () => {
             Where timeless culture meets modern elegance
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="gradient-hero text-lg px-8">
-              Book Your Stay
-            </Button>
+            <Link to="/accommodations">
+              <Button size="lg" className="gradient-hero text-lg px-8">
+                Book Your Stay
+              </Button>
+            </Link>
             <Link to="/experiences">
               <Button size="lg" variant="outline" className="text-lg px-8 bg-card/80 backdrop-blur-sm">
                 Explore Experiences
@@ -99,9 +105,20 @@ const Home = () => {
                     <span className="text-2xl font-bold text-accent">{room.price}</span>
                   </div>
                   <p className="text-muted-foreground mb-4">{room.description}</p>
-                  <Link to="/accommodations">
-                    <Button className="w-full gradient-hero">View Details</Button>
-                  </Link>
+                  <div className="flex gap-2">
+                    <Button 
+                      className="flex-1 gradient-hero"
+                      onClick={() => {
+                        setSelectedRoom(room);
+                        setBookingDialogOpen(true);
+                      }}
+                    >
+                      Book Now
+                    </Button>
+                    <Link to="/accommodations" className="flex-1">
+                      <Button variant="outline" className="w-full">View Details</Button>
+                    </Link>
+                  </div>
                 </CardContent>
               </Card>
             ))}
@@ -224,6 +241,15 @@ const Home = () => {
           </Link>
         </div>
       </section>
+
+      {/* Booking Dialog */}
+      {selectedRoom && (
+        <RoomBookingDialog
+          open={bookingDialogOpen}
+          onOpenChange={setBookingDialogOpen}
+          room={selectedRoom}
+        />
+      )}
     </div>
   );
 };
